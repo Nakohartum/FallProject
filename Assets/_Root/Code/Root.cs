@@ -3,6 +3,7 @@ using _Root.Code.ClampFeature;
 using _Root.Code.Figure;
 using _Root.Code.InputFeature;
 using _Root.Code.ScoreFeature;
+using _Root.Code.UIFeature;
 using UnityEngine;
 
 namespace _Root.Code
@@ -14,6 +15,7 @@ namespace _Root.Code
         [SerializeField] private int _thingsToSpawn;
         [SerializeField] private GameManager _gameManager;
         [SerializeField] private ScoreBootstrap _scoreBootstrap;
+        [SerializeField] private UIBootstrap _uiBootstrap;
         private InputHandler _inputHandler;
 
 
@@ -22,7 +24,9 @@ namespace _Root.Code
             _scoreBootstrap.Initialize();
             _clampBootstrap.Initialize();
             _figureBootstrap.Initialize(_clampBootstrap.Thickness, _scoreBootstrap.ScorePresenter);
-            _gameManager.CreateObjects(_thingsToSpawn, _figureBootstrap.FigureFactory);
+            _gameManager.Initialize(_figureBootstrap.FigureFactory, _scoreBootstrap.ScorePresenter, _thingsToSpawn);
+            _gameManager.CreateObjects();
+            _uiBootstrap.Initialize();
             _inputHandler = new InputHandler();
         }
 

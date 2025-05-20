@@ -33,7 +33,11 @@ namespace _Root.Code.Figure.View
             BackgroundRenderer.color = color;
         }
 
-        
+        private void OnDestroy()
+        {
+            FigurePresenter.Dispose();
+        }
+
 
         public void PerformClick()
         {

@@ -14,6 +14,7 @@ namespace _Root.Code.Figure
         [SerializeField] private Color[] _colors;
         [SerializeField] private Sprite[] _sprites;
         [SerializeField] private SpriteToEnum<FigureType>[] _backgroundSprites;
+        [SerializeField] private GameManager _gameManager;
         
         public FigureFactory FigureFactory { get; private set; }
         public FigureCellFactory FigureCellFactory { get; private set; }
@@ -21,7 +22,8 @@ namespace _Root.Code.Figure
         public void Initialize(float thickness, ScorePresenter scorePresenter)
         {
             FigureCellFactory = new FigureCellFactory();
-            FigureFactory = new FigureFactory(_sprites, _colors, _figureViewPrefab, _backgroundSprites, thickness, FigureCellFactory, scorePresenter);
+            FigureFactory = new FigureFactory(_sprites, _colors, _figureViewPrefab, _backgroundSprites, 
+                thickness, FigureCellFactory, scorePresenter, _gameManager);
         }
     }
 }

@@ -21,10 +21,13 @@ namespace _Root.Code.Figure
         private readonly float _thickness;
         private FigureCellFactory _figureCellFactory;
         private ScorePresenter _scorePresenter;
+        private GameManager _gameManager;
+        private List<FigureView> _figureViews;
         
 
         public FigureFactory(Sprite[] sprites, Color[] colors, FigureView figureViewPrefab, 
-            SpriteToEnum<FigureType>[] backgroundSprites, float thickness, FigureCellFactory figureCellFactory, ScorePresenter scorePresenter)
+            SpriteToEnum<FigureType>[] backgroundSprites, float thickness, FigureCellFactory figureCellFactory, 
+            ScorePresenter scorePresenter, GameManager gameManager)
         {
             _sprites = sprites;
             _colors = colors;
@@ -36,6 +39,8 @@ namespace _Root.Code.Figure
             _thickness = thickness;
             _figureCellFactory = figureCellFactory;
             _scorePresenter = scorePresenter;
+            _gameManager = gameManager;
+            _figureViews = new List<FigureView>();
             foreach (var sprite in backgroundSprites)
             {
                 _backgroundSprites.Add(sprite.Type, sprite.Sprite);
@@ -52,8 +57,9 @@ namespace _Root.Code.Figure
             SetRandomSprite(figure);
             var figureType = SetRandomFigure(figure);
             var model = new FigureModel(figureType, figure);
-            var presenter = new FigurePresenter.FigurePresenter(model,_scorePresenter, _figureCellFactory);
+            var presenter = new FigurePresenter.FigurePresenter(model,_scorePresenter, _figureCellFactory, _gameManager);
             figure.Initialize(presenter);
+            _figureViews.Add(figure);
         }
 
         public void CreateFigure(FigureType figureType, Color color)
@@ -66,7 +72,10 @@ namespace _Root.Code.Figure
             figure.SetColor(color);
             figure.SetBackgroundSprite(_backgroundSprites[figureType]);
             var model = new FigureModel(figureType, figure);
-            var presenter = new FigurePresenter.FigurePresenter(model, _scorePresenter, _figureCellFactory);
+            var presenter = new FigurePresenter.FigurePresenter(model, _scorePresenter, _figureCellFactory, _gameManager);
+            figure.Initialize(presenter);
+            SetCollider(figureType, figure.gameObject);
+            _figureViews.Add(figure);
         }
 
         private FigureType SetRandomFigure(FigureView figure)
@@ -126,6 +135,20 @@ namespace _Root.Code.Figure
         private void SetRandomColor(FigureView figure)
         {
             figure.SetColor(_colors[Random.Range(0, _colors.Length)]);
+        }
+
+        public void DestroyFigures()
+        {
+            for (int i = 0; i < _figureViews.Count; i++)
+            {
+                if (_figureViews[i] == null) 
+                {
+                    continue;
+                }
+                Object.Destroy(_figureViews[i].gameObject);
+            }
+
+            _figureViews.Clear();
         }
     }
 }

@@ -7,17 +7,18 @@ using Object = UnityEngine.Object;
 
 namespace _Root.Code.Figure.FigurePresenter
 {
-    public class FigurePresenter : IComparable<FigurePresenter>
+    public class FigurePresenter : IComparable<FigurePresenter>, IDisposable
     {
         public FigureModel FigureModel { get; private set; }
         private ScorePresenter _scorePresenter;
         private FigureCellFactory _figureCellFactory;
-
-        public FigurePresenter(FigureModel figureModel, ScorePresenter scorePresenter, FigureCellFactory figureCellFactory)
+        private GameManager _gameManager;
+        public FigurePresenter(FigureModel figureModel, ScorePresenter scorePresenter, FigureCellFactory figureCellFactory, GameManager gameManager)
         {
             FigureModel = figureModel;
             _scorePresenter = scorePresenter;
             _figureCellFactory = figureCellFactory;
+            _gameManager = gameManager;
             FigureModel.FigureView.OnClick += FigureViewOnOnClick;
         }
 
@@ -30,6 +31,7 @@ namespace _Root.Code.Figure.FigurePresenter
             _figureCellFactory.RemakeFigureCell(figureCellView, sprite, backgroundSprite, color, this);
             _scorePresenter.CheckCells();
             Object.Destroy(FigureModel.FigureView.gameObject);
+            _gameManager.MinusFigure();
         }
 
         public int CompareTo(FigurePresenter other)
@@ -39,6 +41,11 @@ namespace _Root.Code.Figure.FigurePresenter
                 return 1;
             }
             return FigureModel.CompareTo(other.FigureModel);
+        }
+
+        public void Dispose()
+        {
+            FigureModel.FigureView.OnClick -= FigureViewOnOnClick;
         }
     }
 }

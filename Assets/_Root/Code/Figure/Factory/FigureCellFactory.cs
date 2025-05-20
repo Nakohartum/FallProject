@@ -12,5 +12,6 @@ namespace _Root.Code.Figure
             figureCellView.SetBackgroundSprite(backgroundSprite);
             figureCellView.Initialize(presenter);
         }
+        
     }
 }
