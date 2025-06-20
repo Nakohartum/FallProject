@@ -80,6 +80,8 @@ namespace _Root.Code.ScoreFeature
                 figureCellViews[i].ResetView();
             }
         }
+        
+        
 
         public void ResetAllView()
         {

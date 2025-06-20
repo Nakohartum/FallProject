@@ -80,7 +80,7 @@ namespace _Root.Code
             {
                 StopCoroutine(_createFiguresRoutine);
             }
-            _figureFactory.DestroyFigures();
+            _figureFactory.DestroyFigures(); 
             _createFiguresRoutine = StartCoroutine(RegenerateFiguresRoutine(true));
         }
 
@@ -93,6 +93,7 @@ namespace _Root.Code
         private void CheckGameCondition()
         {
             var usedCells = _scorePresenter.GetUsedCells();
+            Debug.Log(_currentAmount);
             if (usedCells == 7)
             {
                 OnGameConditionChanged(GameState.Lose);
@@ -143,6 +144,7 @@ namespace _Root.Code
 
         public void RestartGame()
         {
+            _currentAmount = 0;
             _scorePresenter.ResetAllView();
             _figureFactory.DestroyFigures();
             CreateObjects();
