@@ -22,6 +22,11 @@ namespace _Root.Code.Figure.Model
             Color = FigureView.BackgroundRenderer.color;
         }
 
+        public void ChangeColor()
+        {
+            Color = FigureView.BackgroundRenderer.color;
+        }
+        
         public int CompareTo(FigureModel other)
         {
             if (FigureType == other.FigureType 

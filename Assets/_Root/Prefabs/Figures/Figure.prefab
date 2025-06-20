@@ -196,6 +196,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <BackgroundRenderer>k__BackingField: {fileID: 3404137306128629981}
   <ForegroundRenderer>k__BackingField: {fileID: 9026384467019101011}
+  <Rigidbody2D>k__BackingField: {fileID: 1150394058218379025}
 --- !u!1 &3303423541717044919
 GameObject:
   m_ObjectHideFlags: 0

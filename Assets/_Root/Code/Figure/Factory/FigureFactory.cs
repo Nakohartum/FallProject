@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using _Root.Code.EditorHelper;
+using _Root.Code.Figure.FigureBehaviour;
 using _Root.Code.Figure.Model;
 using _Root.Code.Figure.View;
 using _Root.Code.ScoreFeature;
@@ -22,7 +23,7 @@ namespace _Root.Code.Figure
         private FigureCellFactory _figureCellFactory;
         private ScorePresenter _scorePresenter;
         private GameManager _gameManager;
-        private List<FigureView> _figureViews;
+        public List<FigureView> FigureViews { get; private set; }
         
 
         public FigureFactory(Sprite[] sprites, Color[] colors, FigureView figureViewPrefab, 
@@ -40,7 +41,7 @@ namespace _Root.Code.Figure
             _figureCellFactory = figureCellFactory;
             _scorePresenter = scorePresenter;
             _gameManager = gameManager;
-            _figureViews = new List<FigureView>();
+            FigureViews = new List<FigureView>();
             foreach (var sprite in backgroundSprites)
             {
                 _backgroundSprites.Add(sprite.Type, sprite.Sprite);
@@ -55,11 +56,33 @@ namespace _Root.Code.Figure
             var figure = Object.Instantiate(_figureViewPrefab, positionToSpawn, Quaternion.identity);
             SetRandomColor(figure);
             SetRandomSprite(figure);
+            SetRandomBehaviour(figure);
             var figureType = SetRandomFigure(figure);
             var model = new FigureModel(figureType, figure);
             var presenter = new FigurePresenter.FigurePresenter(model,_scorePresenter, _figureCellFactory, _gameManager);
             figure.Initialize(presenter);
-            _figureViews.Add(figure);
+            FigureViews.Add(figure);
+        }
+
+        private void SetRandomBehaviour(IFigureView figure)
+        {
+            Debug.Log("We set random behaviour");
+            var random = Random.Range(1, 5);
+            figure.SetEnabled(true);
+            switch (random)
+            {
+                case 1:
+                    var frozenBehaviour = new FrozenBehaviour(figure);
+                    frozenBehaviour.OnSpawn();
+                    figure.SetEnabled(false);
+                    break;
+                case 2:
+                    var heavyBehaviour = new HeavyBehaviour(figure);
+                    heavyBehaviour.OnSpawn();
+                    break;
+                default:
+                    break;
+            }
         }
 
         public void CreateFigure(FigureType figureType, Color color)
@@ -71,11 +94,12 @@ namespace _Root.Code.Figure
             figure.SetSprite(_sprites[1]);
             figure.SetColor(color);
             figure.SetBackgroundSprite(_backgroundSprites[figureType]);
+            SetRandomBehaviour(figure);
             var model = new FigureModel(figureType, figure);
             var presenter = new FigurePresenter.FigurePresenter(model, _scorePresenter, _figureCellFactory, _gameManager);
             figure.Initialize(presenter);
             SetCollider(figureType, figure.gameObject);
-            _figureViews.Add(figure);
+            FigureViews.Add(figure);
         }
 
         private FigureType SetRandomFigure(FigureView figure)
@@ -139,16 +163,16 @@ namespace _Root.Code.Figure
 
         public void DestroyFigures()
         {
-            for (int i = 0; i < _figureViews.Count; i++)
+            for (int i = 0; i < FigureViews.Count; i++)
             {
-                if (_figureViews[i] == null) 
+                if (FigureViews[i] == null) 
                 {
                     continue;
                 }
-                Object.Destroy(_figureViews[i].gameObject);
+                Object.Destroy(FigureViews[i].gameObject);
             }
 
-            _figureViews.Clear();
+            FigureViews.Clear();
         }
     }
 }
